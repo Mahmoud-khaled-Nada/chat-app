@@ -17,8 +17,13 @@ import { IoMdSearch } from "react-icons/io";
 
 import { IoClose } from "react-icons/io5";
 import { FlexIcon } from "../../../styled-components";
+import { UserProfileDetails } from "../../../utils/types";
 
-export const FriendsSidebar = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const FriendsSidebar = ({user} : Props) => {
   return (
     <>
       <ChatListHeader>

@@ -7,22 +7,27 @@ import { SettingsSidebar } from "./sidebar-toggle/SettingsSidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { ChatSidebar } from "./sidebar-toggle/ChatSidebar";
+import { UserProfileDetails } from "../../utils/types";
 
-export const ChatList = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const ChatList = ({user}:Props) => {
   const activeTab = useSelector((state: RootState) => state.sidebarToggle.sidebarTabs);
 
   const handle = () => {
     switch (true) {
       case activeTab === "chats":
-        return <ChatSidebar />;
+        return <ChatSidebar user={user!} />;
       case activeTab === "friends":
-        return <FriendsSidebar />;
+        return <FriendsSidebar user={user!} />;
       case activeTab === "notification":
-        return <NotificationSidebar />;
+        return <NotificationSidebar user={user!}/>;
       case activeTab === "favorite":
-        return <FavoriteSidebar />;
+        return <FavoriteSidebar user={user!}/>;
       case activeTab === "settings":
-        return <SettingsSidebar />;
+        return <SettingsSidebar user={user!}/>;
     }
   };
 

@@ -5,14 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import entities from '@/utils/typeorm';
+import { ConversationsModule } from './conversations/conversations.module';
+import { MessagesModule } from './messages/messages.module';
 
 let envFilePath = '.env';
 if (process.env.APP_ENV === 'PRODUCTION') envFilePath = '.env.production';
 
 @Module({
   imports: [
-    UsersModule,
-    AuthModule,
     ConfigModule.forRoot({ envFilePath }),
     PassportModule.register({ session: true }),
     TypeOrmModule.forRoot({
@@ -27,6 +27,10 @@ if (process.env.APP_ENV === 'PRODUCTION') envFilePath = '.env.production';
       logging: false,
     }),
 
+    AuthModule,
+    UsersModule,
+    ConversationsModule,
+    MessagesModule
   ],
   controllers: [],
   providers: [],

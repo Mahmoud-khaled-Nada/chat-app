@@ -3,11 +3,17 @@ import { MulterField } from '@nestjs/platform-express/multer/interfaces/multer-o
 export enum Routes {
   AUTH = 'auth',
   USERS = 'users',
+  PROFILE = 'profile',
+  CONVERSATIONS = 'conversations',
+  MESSAGES = 'messages',
 }
 
 export enum Services {
   AUTH = 'AUTH_SERVICE',
   USERS = 'USERS_SERVICE',
+  PROFILE = 'PROFILE_SERVICE',
+  CONVERSATIONS = 'CONVERSATIONS_SERVICE',
+  MESSAGES = 'MESSAGES_SERVICE',
 }
 
 export enum ServerEvents {
@@ -27,10 +33,6 @@ export enum WebsocketEvents {
 }
 
 export const UserProfileFileFields: MulterField[] = [
-  {
-    name: 'banner',
-    maxCount: 1,
-  },
   {
     name: 'avatar',
     maxCount: 1,

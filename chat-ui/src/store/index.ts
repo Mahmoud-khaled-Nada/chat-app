@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import sidebarToggleReducer from "./sidebarToggleSlice";
+import sidebarToggleSlice from "./sidebarToggleSlice";
+import userSlice from "./userSlice";
+import conversationSlice from "./conversationSlice";
 
 export const store = configureStore({
   reducer: {
-    sidebarToggle: sidebarToggleReducer,
+    sidebarToggle: sidebarToggleSlice,
+    user: userSlice,
+    conversation: conversationSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
   devTools: true,

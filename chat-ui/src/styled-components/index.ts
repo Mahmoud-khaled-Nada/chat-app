@@ -103,7 +103,7 @@ export const SignCardP = styled.p`
   line-height: 1.5;
 `;
 
-export const InputContainer = styled.div`
+export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -139,6 +139,7 @@ export const SidebarTop = styled.div`
     width: 50px;
     height: 50px;
     margin-bottom: 1rem;
+    border-radius: 50%;
   }
 
   svg {
@@ -446,12 +447,19 @@ export const MessagesContainer = styled.div`
   background-image: url(${chatBackground});
   background-size: cover;
   background-position: center;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: ${colors.primary};
+
+  }
 `;
 
 // Message Content
 export const MessageContent = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 0 50px;
   p {
     margin: 0;
     font-size: 0.95rem;
@@ -470,7 +478,7 @@ export const Message = styled.div.withConfig({
 
   ${MessageContent} {
     background-color: ${({ isSent }) => (isSent ? "#DCF8C6" : "#f1f1f1")};
-    border-radius: 10px;
+    border-radius:${({ isSent }) => (isSent ? "15px 0 15px 15px" : "0 15px 15px 15px")}  ;
     padding: 10px;
     max-width: 60%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */

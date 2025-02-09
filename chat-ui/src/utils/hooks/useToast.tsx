@@ -1,21 +1,34 @@
-import { toast, ToastOptions } from "react-toastify";
+import { toast } from "sonner";
+import { CheckCircle, XCircle, Info, AlertTriangle } from "lucide-react"; // Import icons
 
-interface UseToast {
-  success: (data: string, options?: ToastOptions) => void;
-  error: (data: string, options?: ToastOptions) => void;
-  info: (data: string, options?: ToastOptions) => void;
-}
+type ToastType = "success" | "error" | "info" | "warning";
 
-export function useToast(
-  defaultOptions: ToastOptions = { position: "top-center", hideProgressBar: true }
-): UseToast {
-  const success = (data: string, options?: ToastOptions) =>
-    toast.success(data, { ...defaultOptions, ...options });
+const toastStyles: Record<ToastType, { color: string; icon: React.ReactNode }> = {
+  success: { color: "bg-green-500 text-white", icon: <CheckCircle className="text-green-400 w-5 h-5" /> },
+  error: { color: "bg-red-500 text-white", icon: <XCircle className="text-red-400 w-5 h-5" /> },
+  info: { color: "bg-blue-500 text-white", icon: <Info className="text-blue-400 w-5 h-5" /> },
+  warning: { color: "bg-yellow-500 text-black", icon: <AlertTriangle className="text-yellow-400 w-5 h-5" /> },
+};
 
-  const error = (data: string, options?: ToastOptions) =>
-    toast.error(data, { ...defaultOptions, ...options });
+export const useToast = () => {
+  const showToast = (type: ToastType, message: string, description?: string) => {
+    toast[type](message, {
+      description,
+      duration: 4000,
+      position: "bottom-right",
+      icon: toastStyles[type].icon,
+      classNames: {
+        toast: `p-4 rounded-lg shadow-lg border ${toastStyles[type].color}`,
+        title: "font-semibold",
+        description: "text-sm text-gray-200",
+      },
+    });
+  };
 
-  const info = (data: string, options?: ToastOptions) => toast.info(data, { ...defaultOptions, ...options });
-
-  return { success, error, info };
-}
+  return {
+    success: (msg: string, desc?: string) => showToast("success", msg, desc),
+    error: (msg: string, desc?: string) => showToast("error", msg, desc),
+    info: (msg: string, desc?: string) => showToast("info", msg, desc),
+    warning: (msg: string, desc?: string) => showToast("warning", msg, desc),
+  };
+};

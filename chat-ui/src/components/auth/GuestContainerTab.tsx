@@ -1,15 +1,21 @@
-import logo from "@asset/logo.png";
-import { SignSection, SignTab, SignTabBtn,
-   SignCard, SignCardHeader,
-    SignCardLogo,
-     SignCardH1, SignCardP } from "@styled";
+import {
+  SignSection,
+  SignTab,
+  SignTabBtn,
+  SignCard,
+  SignCardHeader,
+  SignCardLogo,
+  SignCardH1,
+  SignCardP,
+} from "@styled";
 import { useState } from "react";
 import { Login } from "./Login";
 import { Signup } from "./Signup";
+import logo from "@asset/logo.png";
 
 function GuestContainerTab() {
   const [tab, setTab] = useState<string>("login");
-  
+
   const renderTabContent = () => {
     switch (tab) {
       case "login":
@@ -24,16 +30,12 @@ function GuestContainerTab() {
   return (
     <SignSection>
       <SignTab>
-        <SignTabBtn 
-          onClick={() => setTab("login")} 
-          aria-selected={tab === "login"} 
-          aria-controls="login-tab"
-        >
+        <SignTabBtn onClick={() => setTab("login")} aria-selected={tab === "login"} aria-controls="login-tab">
           Login
         </SignTabBtn>
-        <SignTabBtn 
-          onClick={() => setTab("signup")} 
-          aria-selected={tab === "signup"} 
+        <SignTabBtn
+          onClick={() => setTab("signup")}
+          aria-selected={tab === "signup"}
           aria-controls="signup-tab"
         >
           Signup

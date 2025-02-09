@@ -60,7 +60,7 @@ export const UserInfo = styled.div`
   }
 `;
 
-export const UserAboutDetails = styled.div`
+export const UserAboutDetails = styled.form`
   display: flex;
   flex-direction: column;
   max-width: 95%;
@@ -71,6 +71,13 @@ export const UserAboutDetails = styled.div`
     color: #fff; 
     background: transparent;
     outline: none;
+  }
+  button {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-top: 5px;
+    cursor: pointer;
   }
 `;
 

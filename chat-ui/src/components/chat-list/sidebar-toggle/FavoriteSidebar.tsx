@@ -14,8 +14,13 @@ import { IoClose } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import { Text } from "../../../styled-components";
 import { FlexIcon } from "../../../styled-components/index";
+import { UserProfileDetails } from "../../../utils/types";
 
-export const FavoriteSidebar = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const FavoriteSidebar = ({user}:Props) => {
   return (
     <>
       <ChatListHeader>

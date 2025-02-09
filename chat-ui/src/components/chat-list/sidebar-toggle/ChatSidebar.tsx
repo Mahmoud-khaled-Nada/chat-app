@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   ActionButton,
@@ -20,21 +20,46 @@ import {
 import avatar1 from "@asset/avatars/avatar_1.jpg";
 import avatar2 from "@asset/avatars/avatar_2.jpg";
 import { LuEllipsisVertical } from "react-icons/lu";
-
 import { MdAddComment } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
-
 import { IoCheckmarkDone } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import { UpdateMenu } from "../dropdown-menu/UpdateMenu";
 import { NewConnectModel } from "../../models/NewConnectModel";
+import { ConversationsDetails, UserProfileDetails } from "../../../utils/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
+import { fetchConversationsThunk, setSelectedConversation, updateConversation } from "../../../store/conversationSlice";
+import {
+  conversationAvatar,
+  conversationformatName,
+  formatTime,
+  formatUsername,
+  getAvatar,
+} from "../../../utils/helper";
+import { storage } from "../../../utils/storage";
 
-export const ChatSidebar = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const ChatSidebar = ({ user }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
+
+  useEffect(() => {
+    dispatch(fetchConversationsThunk());
+  }, []);
+
+  const { conversations } = useSelector((state: RootState) => state.conversation);
+
+  const openConversation = (id: number) => {
+    dispatch(setSelectedConversation(id))
+  };
 
   return (
     <>
@@ -59,29 +84,21 @@ export const ChatSidebar = () => {
       </ChatListHeader>
 
       <ChatListContent>
-        <ChatListItem isActive={true}>
-          <Avatar src={avatar1} alt="User" />
-          <ChatInfo>
-            <ChatName>Jane Doe</ChatName>
-            <LastMessage>
-              <IoCheckmarkDone />
-              <p> Hey! How are you?</p>
-            </LastMessage>
-          </ChatInfo>
-          <MessageTimestamp>10:30 AM</MessageTimestamp>
-        </ChatListItem>
-
-        <ChatListItem isActive={true}>
-          <Avatar src={avatar2} alt="User" isActive={true} />
-          <ChatInfo>
-            <ChatName>Jane Doe</ChatName>
-            <LastMessage isActive={true}>
-              <IoCheckmarkDone />
-              <p> Hey! How are you?</p>
-            </LastMessage>
-          </ChatInfo>
-          <MessageTimestamp>10:30 AM</MessageTimestamp>
-        </ChatListItem>
+        {conversations &&
+          conversations.length > 0 &&
+          conversations.map((conversation, index) => (
+            <ChatListItem key={index} isActive={true} onClick={() => openConversation(conversation.id)}>
+              <Avatar src={conversationAvatar(conversation, user.id) || avatar2} alt="User" isActive={true} />
+              <ChatInfo>
+                <ChatName>{conversationformatName(conversation, user.id)}</ChatName>
+                <LastMessage isActive={false}>
+                  <IoCheckmarkDone />
+                  <p>{conversation.lastMessageSent?.content}</p>
+                </LastMessage>
+              </ChatInfo>
+              <MessageTimestamp>{formatTime(conversation.lastMessageSentAt) || "10:30 AM"}</MessageTimestamp>
+            </ChatListItem>
+          ))}
       </ChatListContent>
       {/* Floating Update Button */}
       <FloatingUpdateButton onClick={toggleMenu}>

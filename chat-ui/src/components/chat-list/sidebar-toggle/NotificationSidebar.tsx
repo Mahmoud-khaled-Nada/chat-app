@@ -6,15 +6,18 @@ import {
   ChatListItem,
   ChatName,
   HeaderTop,
-
 } from "@styled";
 
 import avatar1 from "@asset/avatars/avatar_1.jpg";
-
 import { IoClose } from "react-icons/io5";
 import { Text } from "../../../styled-components";
+import { UserProfileDetails } from "../../../utils/types";
 
-export const NotificationSidebar = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const NotificationSidebar = ({user}:Props) => {
   return (
     <>
       <ChatListHeader>

@@ -11,15 +11,24 @@ import { setActiveTab } from "../../store/sidebarToggleSlice";
 import Notification from "../notification/Notification";
 import { LogoutModel } from "../models/LogoutModel";
 import { useState } from "react";
+import { getAvatar } from "../../utils/helper";
+import { UserProfileDetails } from "../../utils/types";
 
-export const Sidebar = () => {
+type Props = {
+  user: UserProfileDetails;
+};
+
+export const Sidebar = ({ user }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useSelector((state: RootState) => state.sidebarToggle.sidebarTabs);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
+  const avatar = user && getAvatar(user.profile);
+
   return (
     <SidebarUi>
       <SidebarTop>
-        <img src={sidebarlogo} alt="Sidebar Logo" />
+        <img src={avatar || sidebarlogo} alt="Sidebar Logo" />
         <IoIosChatbubbles
           className={activeTab === "chats" ? "active" : ""}
           onClick={() => dispatch(setActiveTab("chats"))}
