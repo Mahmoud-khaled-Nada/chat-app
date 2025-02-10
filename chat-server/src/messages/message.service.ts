@@ -12,7 +12,6 @@ import {
   EditMessageParams,
 } from '../utils/types';
 import { ConversationNotFoundException } from '@/conversations/exceptions/ConversationNotFoundException';
-import { CannotCreateMessageException } from './exceptions/CannotCreateMessage';
 
 @Injectable()
 export class MessageService implements IMessageService {
@@ -30,7 +29,7 @@ export class MessageService implements IMessageService {
 
     if (!conversation) throw new ConversationNotFoundException();
 
-    const { creator, recipient } = conversation;
+    // const { creator, recipient } = conversation;
 
     // const isFriends = await this.friendsService.isFriends(
     //   creator.id,
@@ -39,10 +38,8 @@ export class MessageService implements IMessageService {
 
     // if (!isFriends) throw new FriendNotFoundException();
 
-    if (creator.id !== user.id && recipient.id !== user.id)
-      throw new CannotCreateMessageException();
-
-    console.log(conversation);
+    // if (creator.id !== user.id && recipient.id !== user.id)
+    //   throw new CannotCreateMessageException();
 
     const message = this.messageRepository.create({
       content,
@@ -51,14 +48,18 @@ export class MessageService implements IMessageService {
       attachments: params.attachments ? [] : [],
     });
 
-
     const savedMessage = await this.messageRepository.save(message);
 
     conversation.lastMessageSent = savedMessage;
 
     await this.conversationService.save(conversation);
-  
-    return { message: savedMessage, conversation };
+
+    const sanitizedConversation = {
+      ...conversation,
+      lastMessageSent: message,
+    };
+
+    return { message: savedMessage, conversation: sanitizedConversation };
   }
 
   getMessages(conversationId: number): Promise<Message[]> {
@@ -66,6 +67,7 @@ export class MessageService implements IMessageService {
       relations: ['author', 'attachments', 'author.profile'],
       where: { conversation: { id: conversationId } },
       order: { createdAt: 'DESC' },
+      take: 10,
     });
   }
 

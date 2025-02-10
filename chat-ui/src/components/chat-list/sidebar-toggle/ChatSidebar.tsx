@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
-
+import avatar2 from "@asset/avatars/avatar_2.jpg";
+import { LuEllipsisVertical } from "react-icons/lu";
+import { MdAddComment } from "react-icons/md";
+import { IoMdSearch } from "react-icons/io";
+import { IoCheckmarkDone } from "react-icons/io5";
+import { IoMdAdd } from "react-icons/io";
+import { UpdateMenu } from "../dropdown-menu/UpdateMenu";
+import { NewConnectModel } from "../../models/NewConnectModel";
+import { UserProfileDetails } from "../../../utils/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
+import { fetchConversationsThunk, setSelectedConversation } from "../../../store/conversationSlice";
+import { conversationAvatar, conversationformatName, formatTime } from "../../../utils/helper";
 import {
   ActionButton,
   Avatar,
@@ -15,29 +27,8 @@ import {
   MessageTimestamp,
   SearchBar,
   SearchInput,
-} from "@styled";
+} from "../../../styled-components";
 
-import avatar1 from "@asset/avatars/avatar_1.jpg";
-import avatar2 from "@asset/avatars/avatar_2.jpg";
-import { LuEllipsisVertical } from "react-icons/lu";
-import { MdAddComment } from "react-icons/md";
-import { IoMdSearch } from "react-icons/io";
-import { IoCheckmarkDone } from "react-icons/io5";
-import { IoMdAdd } from "react-icons/io";
-import { UpdateMenu } from "../dropdown-menu/UpdateMenu";
-import { NewConnectModel } from "../../models/NewConnectModel";
-import { ConversationsDetails, UserProfileDetails } from "../../../utils/types";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store";
-import { fetchConversationsThunk, setSelectedConversation, updateConversation } from "../../../store/conversationSlice";
-import {
-  conversationAvatar,
-  conversationformatName,
-  formatTime,
-  formatUsername,
-  getAvatar,
-} from "../../../utils/helper";
-import { storage } from "../../../utils/storage";
 
 type Props = {
   user: UserProfileDetails;
@@ -58,7 +49,7 @@ export const ChatSidebar = ({ user }: Props) => {
   const { conversations } = useSelector((state: RootState) => state.conversation);
 
   const openConversation = (id: number) => {
-    dispatch(setSelectedConversation(id))
+    dispatch(setSelectedConversation(id));
   };
 
   return (

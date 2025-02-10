@@ -5,11 +5,10 @@ import { BaseMessage } from './BaseMessage';
 
 @Entity({ name: 'messages' })
 export class Message extends BaseMessage {
-  
-  @ManyToOne(() => Conversation, (conversation) => conversation.messages, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "conversationId" }) // Ensure it's mapped correctly
+  @ManyToOne(() => Conversation, (conversation) => conversation.messages, {
+    nullable: false,
+  })
   conversation: Conversation;
-
 
   @OneToMany(() => MessageAttachment, (attachment) => attachment.message)
   @JoinColumn()

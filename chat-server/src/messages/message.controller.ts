@@ -16,7 +16,7 @@ import { Routes, Services } from '../utils/constants';
 import { Auth } from '../utils/decorators';
 import { User } from '../utils/typeorm';
 import { IMessageService } from './message';
-//   import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 //   import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Attachment } from '../utils/types';
@@ -30,41 +30,33 @@ import { GetMessageDto } from './dtos/GetMessageDto.dto';
 export class MessageController {
   constructor(
     @Inject(Services.MESSAGES) private readonly messageService: IMessageService,
-    //   private eventEmitter: EventEmitter2,
+    private event: EventEmitter2,
   ) {}
-
-  // @Throttle(5, 10)
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'attachments', maxCount: 5 }]),
-  )
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async createMessage(
     @Auth() user: User,
-    @UploadedFiles() { attachments }: { attachments: Attachment[] },
     @Body() { content, conversationId }: CreateMessageDto,
   ) {
-    if (!attachments && !content) throw new EmptyMessageException();
-
-    const params = { user, conversationId, content, attachments };
+    if (!content) throw new EmptyMessageException();
+    const params = { user, conversationId, content };
     const response = await this.messageService.createMessage(params);
-    //   this.eventEmitter.emit('message.create', response);
+    this.event.emit('message.create', response);
     return response;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get(':id')
   // @SkipThrottle()
   async getMessagesFromConversation(
     @Auth() user: User,
-    // @Param('id') id: number,
-    @Body() {conversationId} : GetMessageDto,
+    @Param('id') id: number,
+    // @Body() {conversationId} : GetMessageDto,
   ) {
-
-    console.log(conversationId)
-    const messages = await this.messageService.getMessages(conversationId);
-    return { conversationId, messages };
+    console.log(id);
+    const messages = await this.messageService.getMessages(id);
+    return { id, messages };
   }
 
   @Delete(':messageId')

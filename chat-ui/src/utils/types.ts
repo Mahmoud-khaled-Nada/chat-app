@@ -61,14 +61,18 @@ export type LastMessageSent = {
 
 export type ConversationsDetails = {
   id: number;
-  lastMessageSentAt: string;
   createdAt: string;
-  lastMessageSent: LastMessageSent | null;
+  lastMessageSentAt: string;
   creator: UserProfileDetails;
   recipient: UserProfileDetails;
+  lastMessageSent?: {
+    id: number;
+    content: string;
+    createdAt: string;
+  };
 };
 
-export type Message = {
+export type ConversationMessageDetails = {
   id: number;
   content: string;
   createdAt: string;
@@ -81,5 +85,48 @@ export type ConversationDetails = {
   lastMessageSent: LastMessageSent | null;
   creator: UserProfileDetails;
   recipient: UserProfileDetails;
+  messages: ConversationMessageDetails[];
+};
+
+export type Message = {
+  id: number;
+  content: string;
+  createdAt: string;
+  author: UserProfileDetails;
+};
+
+export type MessagesResponse = {
+  id: number;
   messages: Message[];
+};
+
+export type MessageParams = {
+  conversationId: number;
+  content: string;
+  attachments: File | string;
+};
+
+/////
+
+export type ConversationMessage = {
+  id: number;
+  createdAt: string;
+  lastMessageSentAt: string;
+  creator: UserProfileDetails;
+  recipient: UserProfileDetails;
+};
+
+
+export type MessageDetails = {
+  id: number;
+  content: string;
+  createdAt: string;
+  author: UserProfileDetails;
+  attachments: any[];
+  conversation: ConversationsDetails;
+};
+
+export type CreateMessageResponse = {
+  conversation: ConversationMessage;
+  message: MessageDetails;
 };

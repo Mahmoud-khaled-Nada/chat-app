@@ -1,7 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { FormContainer } from "@styled";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { FormContainer } from "../../styled-components";
 import { useToast } from "../../utils/hooks/useToast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

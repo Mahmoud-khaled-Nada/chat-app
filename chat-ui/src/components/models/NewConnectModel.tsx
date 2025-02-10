@@ -1,11 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "../../utils/hooks/useToast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { ConversationsDetails, CreateConversationParams } from "../../utils/types";
@@ -14,6 +14,7 @@ import { postCreateConversation } from "../../utils/api";
 import { AxiosError } from "axios";
 import { addConversation } from "../../store/conversationSlice";
 import { Loader2 } from "lucide-react";
+import { socket } from "../../utils/socket";
 
 interface NewConnectProps {
   open: boolean;
@@ -37,8 +38,8 @@ export function NewConnectModel({ open, onOpenChange }: NewConnectProps) {
   const onSubmit: SubmitHandler<CreateConversationParams> = (data) => {
     setIsLoading(true);
     postCreateConversation(data)
-      .then((response: ResponseCreateConversation) => {
-        dispatch(addConversation(response.data));
+      .then(({ data }: ResponseCreateConversation) => {
+        dispatch(addConversation(data));
         success("Login successful");
       })
       .catch((err: unknown) => {
@@ -57,6 +58,21 @@ export function NewConnectModel({ open, onOpenChange }: NewConnectProps) {
         setIsLoading(false);
       });
   };
+
+
+  useEffect(() => {
+    const handleNewConversation = (data: ConversationsDetails) => {
+      console.log("Received onConversation event", data);
+      dispatch(addConversation(data));
+    };
+  
+    socket.on("onConversation", handleNewConversation);
+  
+    return () => {
+      socket.off("onConversation", handleNewConversation);
+    };
+  }, [dispatch]);
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

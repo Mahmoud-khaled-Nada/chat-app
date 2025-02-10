@@ -1,4 +1,4 @@
-import { ConversationsDetails, Profile } from "./types";
+import { ConversationsDetails, Profile, UserProfileDetails } from "./types";
 
 const CDN = import.meta.env.VITE_CDN_ATTACHMENT;
 
@@ -39,3 +39,13 @@ export function formatTime(timestamp: string, timeZone = "UTC") {
     timeZone,
   }).format(new Date(timestamp));
 }
+
+export const conversationalPartner = (user: UserProfileDetails, conversation: ConversationsDetails) => {
+  if (conversation.creator.id !== user.id) {
+    return conversation.creator;
+  } else {
+    return conversation.recipient;
+  }
+};
+
+export const isAuthor = (author: UserProfileDetails, user: UserProfileDetails) => author.id === user.id;

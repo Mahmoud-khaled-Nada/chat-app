@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-//   import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 //   import { SkipThrottle } from '@nestjs/throttler';
 import { Routes, Services } from '../utils/constants';
 import { User } from '../utils/typeorm';
@@ -23,14 +23,10 @@ export class ConversationsController {
   constructor(
     @Inject(Services.CONVERSATIONS)
     private readonly conversationsService: IConversationsService,
-    //   private readonly events: EventEmitter2,
+    private readonly events: EventEmitter2,
   ) {}
 
-  @Get('test/endpoint/check')
-  test() {
-    return;
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createConversation(
     @Auth() user: User,
@@ -41,7 +37,7 @@ export class ConversationsController {
       user,
       createConversationPayload,
     );
-    //   this.events.emit('conversation.create', conversation);
+    this.events.emit('conversation.create', conversation);
     return conversation;
   }
 

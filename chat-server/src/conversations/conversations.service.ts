@@ -48,24 +48,32 @@ export class ConversationsService implements IConversationsService {
     );
   }
 
-  async findById(id: number) {
-    return this.conversationRepository.findOne({
-      where: { id },
-      relations: [
-        'creator',
-        'recipient',
-        'creator.profile',
-        'recipient.profile',
-        'lastMessageSent',
-      ],
-    });
-  }
+  // async findById(id: number) {
+  //   return this.conversationRepository.findOne({
+  //     where: { id },
+  //     relations: [
+  //       'creator',
+  //       'recipient',
+  //       'creator.profile',
+  //       'recipient.profile',
+  //       'lastMessageSent',
+  //     ],
+  //   });
+  // }
 
-  async findById2(id: number) {
-    return this.conversationRepository.findOne({
-      where: { id }
-    });
+  async findById(id: number) {
+    return this.conversationRepository
+      .createQueryBuilder('conversation')
+      .leftJoinAndSelect('conversation.creator', 'creator')
+      .leftJoinAndSelect('conversation.recipient', 'recipient')
+      .leftJoinAndSelect('creator.profile', 'creatorProfile')
+      .leftJoinAndSelect('recipient.profile', 'recipientProfile')
+      .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent') // Ensure this relation is fetched
+      .where('conversation.id = :id', { id })
+      .orderBy('conversation.lastMessageSentAt', 'DESC')
+      .getOne();
   }
+  
 
   async isCreated(userId: number, recipientId: number) {
     return this.conversationRepository.findOne({
@@ -135,7 +143,10 @@ export class ConversationsService implements IConversationsService {
     return this.conversationRepository.save(conversation);
   }
 
-  getMessages({id,limit}: GetConversationMessagesParams): Promise<Conversation> {
+  getMessages({
+    id,
+    limit,
+  }: GetConversationMessagesParams): Promise<Conversation> {
     return this.conversationRepository
       .createQueryBuilder('conversation')
       .where('id = :id', { id })

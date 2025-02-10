@@ -1,10 +1,10 @@
 import { IoMdSend } from "react-icons/io";
 import {
-  MessageInput as MessageInputUi,
+  MessageInput as Input,
   MessageInputContainer,
   MessageInputWrapper,
   SendButton,
-} from "@styled";
+} from "../../styled-components";
 
 import EmojiPicker from "emoji-picker-react";
 
@@ -12,8 +12,13 @@ import { FaSmile } from "react-icons/fa";
 import { SecondaryCircleButton } from "../../styled-components";
 import FloatingMenu from "./FloatingMenu";
 import { useState } from "react";
+import { postMessage } from "../../utils/api";
 
-export const MessageInput = () => {
+type Props = {
+  conversationId: number;
+};
+
+export const MessageInput = ({ conversationId }: Props) => {
   const [message, setMessage] = useState("");
   const [showPicker, setShowPicker] = useState(false);
 
@@ -21,15 +26,39 @@ export const MessageInput = () => {
     setMessage((prev) => prev + emoji.emoji);
     setShowPicker(false);
   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && message.trim() !== "") {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+  
+    const formData = new FormData();
+    formData.append("conversationId", conversationId.toString());
+    formData.append("content", message);  
+    postMessage(formData)
+      .then((res) => console.log("Message sent successfully:"))
+      .catch((err) => console.error("Message send failed:"));
+  
+    console.log("Sending message:", message);
+    setMessage("");
+  };
+  
+
   return (
     <MessageInputContainer>
       <MessageInputWrapper>
         <FloatingMenu />
 
-        <MessageInputUi
+        <Input
+          as="textarea"
           placeholder="Write your message..."
           value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)} // ✅ Corrected type
+          onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleKeyDown(e)} // ✅ Corrected type
         />
 
         <div className="relative">
@@ -44,7 +73,9 @@ export const MessageInput = () => {
           )}
         </div>
 
-        <SendButton>
+        <SendButton onClick={sendMessage}>
+          {" "}
+          {/* ✅ Send message on button click */}
           <IoMdSend />
         </SendButton>
       </MessageInputWrapper>

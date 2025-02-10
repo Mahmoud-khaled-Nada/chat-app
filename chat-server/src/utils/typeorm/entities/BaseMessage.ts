@@ -16,6 +16,6 @@ export abstract class BaseMessage {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: number;
 
-  @ManyToOne(() => User, (user) => user.messages)
+  @ManyToOne(() => User, (user) => user.messages, { nullable: false })
   author: User;
 }

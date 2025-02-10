@@ -1,26 +1,26 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { FormContainer } from "@styled";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
+import { FormContainer } from "../../styled-components";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LoginParams } from "@/utils/types";
-import { useToast } from "@/utils/hooks/useToast";
-import { postLogin } from "@/utils/api";
+import { LoginParams } from "../../utils/types";
+import { useToast } from "../..//utils/hooks/useToast";
+import { postLogin } from "../../utils/api";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { LoginResponse } from "../../utils/types";
 import { saveUserToken } from "../../utils/api/config";
-import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { setUser } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const { error, success } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const {
     register,

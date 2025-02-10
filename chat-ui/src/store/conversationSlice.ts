@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getConversations } from "../utils/api";
 import { ConversationsDetails } from "../utils/types";
+import { RootState } from ".";
 
 export interface ConversationsState {
   conversations: ConversationsDetails[];
@@ -26,15 +27,20 @@ export const conversationSlice = createSlice({
       console.log("addConversation");
       state.conversations.unshift(action.payload);
     },
-    updateConversation: (state, action: PayloadAction<number>) => {
+    updateConversation: (state, action: PayloadAction<ConversationsDetails>) => {
       console.log("Inside updateConversation");
-      const index = state.conversations.findIndex((c) => c.id === action.payload);
-      const conversation = state.conversations[index];
+      const conversation = action.payload;
+      const index = state.conversations.findIndex((c) => c.id === conversation.id);
+      state.conversations[index] = conversation;
       state.conversations.splice(index, 1);
       state.conversations.unshift(conversation);
     },
     setSelectedConversation: (state, action: PayloadAction<number>) => {
       state.conversationId = action.payload;
+    },
+    clearConversations: (state) => {
+      state.conversations = [];
+      state.conversationId = null;
     },
   },
   extraReducers: (builder) => {
@@ -52,5 +58,13 @@ export const conversationSlice = createSlice({
   },
 });
 
-export const { addConversation, updateConversation, setSelectedConversation } = conversationSlice.actions;
+const selectConversations = (state: RootState) => state.conversation.conversations;
+const selectConversationId = (state: RootState, id: number) => id;
+
+export const selectConversationById = createSelector(
+  [selectConversations, selectConversationId],
+  (conversations, conversationId) => conversations.find((c) => c.id === conversationId)
+);
+
+export const { addConversation, updateConversation, setSelectedConversation, clearConversations } = conversationSlice.actions;
 export default conversationSlice.reducer;

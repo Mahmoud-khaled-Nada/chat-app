@@ -32,9 +32,7 @@ export function useAuth() {
         } else {
           console.log("Fetching user from API...");
           const { data } = await getAuthUser({ signal });
-          const expiresDate = new Date();
-          expiresDate.setMinutes(expiresDate.getMinutes() + 50);
-          storage.cookies_save("user_token", data, { expires: expiresDate });
+          storage.cookies_save("user_token", data, { expires: 1});
           setUpdateUser(data);
           dispatch(setUser(data));
         }

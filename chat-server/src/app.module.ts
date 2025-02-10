@@ -7,7 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import entities from '@/utils/typeorm';
 import { ConversationsModule } from './conversations/conversations.module';
 import { MessagesModule } from './messages/messages.module';
-
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 let envFilePath = '.env';
 if (process.env.APP_ENV === 'PRODUCTION') envFilePath = '.env.production';
 
@@ -26,11 +27,12 @@ if (process.env.APP_ENV === 'PRODUCTION') envFilePath = '.env.production';
       entities,
       logging: false,
     }),
-
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     ConversationsModule,
-    MessagesModule
+    MessagesModule,
+    GatewayModule
   ],
   controllers: [],
   providers: [],

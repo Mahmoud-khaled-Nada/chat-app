@@ -1,5 +1,4 @@
 import {
-  Column,
   CreateDateColumn,
   Entity,
   Index,
@@ -11,6 +10,8 @@ import {
 } from 'typeorm';
 import { User } from './User';
 import { Message } from './Message';
+
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'conversations' })
 @Index(['creator.id', 'recipient.id'], { unique: true })
@@ -28,10 +29,9 @@ export class Conversation {
 
   @OneToMany(() => Message, (message) => message.conversation, {
     cascade: ['insert', 'remove', 'update'],
-    eager: true,
   })
-  
   @JoinColumn()
+  @Exclude()
   messages: Message[];
 
   @OneToOne(() => Message)
@@ -44,3 +44,4 @@ export class Conversation {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: number;
 }
+//last_message_sent

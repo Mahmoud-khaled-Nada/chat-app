@@ -8,6 +8,7 @@ import { Services } from '../utils/constants';
 import { Conversation, Message } from '../utils/typeorm';
 import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Module({
   imports: [

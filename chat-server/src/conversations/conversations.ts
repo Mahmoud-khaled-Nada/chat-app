@@ -15,7 +15,6 @@ export interface IConversationsService {
   getConversations(id: number): Promise<Conversation[]>;
 
   findById(id: number): Promise<Conversation | undefined>;
-  findById2(id: number);
   
 
 //   hasAccess(params: AccessParams): Promise<boolean>;

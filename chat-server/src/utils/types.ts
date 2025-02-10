@@ -1,8 +1,16 @@
 import { Conversation, Message, User } from './typeorm';
 import type { Multer } from 'multer';
+import { Socket } from 'socket.io';
+
 
 export interface AuthenticatedRequest extends Request {
   user: User;
+}
+
+
+
+export interface AuthenticatedSocket extends Socket {
+  user?: User;
 }
 
 export interface Attachment extends Express.Multer.File {}

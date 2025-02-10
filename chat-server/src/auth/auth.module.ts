@@ -16,7 +16,7 @@ import { User } from '@/utils/typeorm';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'default_secret',
-      signOptions: { expiresIn: process.env.JWT_TTL || '1h' },
+      signOptions: { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN || '2d' },
     }),
   ],
   controllers: [AuthController],
